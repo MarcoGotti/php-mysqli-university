@@ -13,7 +13,10 @@ if ($conn && $conn->connect_error) {
 
 //var_dump($conn);
 
-$sql = "SELECT * FROM `students` WHERE YEAR(date_of_birth)=1990;"; //creo una query e la metto in una var
+$sql = "SELECT  `courses`.`period` AS `semester`, `courses`.`year`, `courses`.`name` AS `course`, `degrees`.`name` AS `degree`
+FROM `courses`
+JOIN `degrees` ON `degrees`.`id` = `courses`.`degree_id`
+WHERE `period`='I semestre' AND `year`=1;"; //creo una query e la metto in una var
 $result = $conn->query("$sql"); //method query: mi da un'altro oggetto/istanza che va salvato in un'altra var
 
 //var_dump($result);
@@ -46,14 +49,15 @@ $result = $conn->query("$sql"); //method query: mi da un'altro oggetto/istanza c
     </header>
     <main>
         <div class="container my-3">
-            <div>Tot Results: <?php echo $result->num_rows ?></div>
+            <div>Tot Results: <?= $result->num_rows ?></div>
             <div class="row row-cols-6">
-                <?php while ($student = $result->fetch_assoc()) :
-                    ['name' => $name, 'surname' => $lastname, 'date_of_birth' => $birthdate] = $student ?>
+                <?php while ($course = $result->fetch_assoc()) :
+                    ['semester' => $semester, 'year' => $year, 'course' => $course_name, 'degree' => $degree] = $course ?>
                     <div class="col border border-1 border-black">
-                        <p>name: <strong><?= $name ?></strong></p>
-                        <p>lastname: <strong><?= $lastname ?></strong></p>
-                        <p>birthdate: <strong><?= $birthdate ?></strong></p>
+                        <p>degree: <strong><?= $degree ?></strong></p>
+                        <p>course: <strong><?= $course_name ?></strong></p>
+                        <p>semester: <strong><?= $semester ?></strong></p>
+                        <p>year: <strong><?= $year ?></strong></p>
                     </div>
                 <?php endwhile ?>
             </div>

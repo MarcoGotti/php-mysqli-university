@@ -13,13 +13,15 @@ if ($conn && $conn->connect_error) {
 
 //var_dump($conn);
 
-$sql = "SELECT * FROM `students` WHERE YEAR(date_of_birth)=1990;"; //creo una query e la metto in una var
+$sql = "SELECT `degrees`.`id`, `degrees`.`name` AS `degree`
+FROM `degrees`;"; //creo una query e la metto in una var
 $result = $conn->query("$sql"); //method query: mi da un'altro oggetto/istanza che va salvato in un'altra var
 
-//var_dump($result);
+var_dump($result);
 
 //var_dump($result->fetch_all(MYSQLI_ASSOC));
-//var_dump($result->fetch_assoc());
+var_dump($result->fetch_assoc());
+var_dump($result->fetch_assoc());
 
 
 ?>
@@ -46,14 +48,25 @@ $result = $conn->query("$sql"); //method query: mi da un'altro oggetto/istanza c
     </header>
     <main>
         <div class="container my-3">
-            <div>Tot Results: <?php echo $result->num_rows ?></div>
-            <div class="row row-cols-6">
-                <?php while ($student = $result->fetch_assoc()) :
-                    ['name' => $name, 'surname' => $lastname, 'date_of_birth' => $birthdate] = $student ?>
+            <div>Tot Results: <?= $result->num_rows ?></div>
+            <div class="row row-cols-3">
+                <?php while ($degree = $result->fetch_assoc()) :
+                    ['degree' => $degree, 'id' => $id] = $degree ?>
                     <div class="col border border-1 border-black">
-                        <p>name: <strong><?= $name ?></strong></p>
-                        <p>lastname: <strong><?= $lastname ?></strong></p>
-                        <p>birthdate: <strong><?= $birthdate ?></strong></p>
+
+                        <p><strong><?= $id . '. ' . $degree ?></strong></p>
+
+                        <?php
+
+                        $sql_courses = "SELECT `courses`.`name` AS `course` FROM `degrees` JOIN `courses` ON `courses`.`degree_id` = degrees.id WHERE `degrees`.`id`= $id;"; //creo una query e la metto in una var
+                        $result_courses = $conn->query("$sql_courses");
+
+                        while ($course = $result_courses->fetch_assoc()) : ?>
+
+                            <div><?= $course['course'] ?></div>
+
+                        <?php endwhile ?>
+
                     </div>
                 <?php endwhile ?>
             </div>
