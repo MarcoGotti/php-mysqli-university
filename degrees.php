@@ -41,11 +41,13 @@ var_dump($result->fetch_assoc());
 </head>
 
 <body>
+
     <header class="p-3">
         <a href="index.php">Students</a>
         <a href="firstSem.php">First-Semester</a>
         <a href="degrees.php">Degrees</a>
     </header>
+
     <main>
         <div class="container my-3">
             <div>Tot Results: <?= $result->num_rows ?></div>
@@ -54,9 +56,11 @@ var_dump($result->fetch_assoc());
                     ['degree' => $degree, 'id' => $id] = $degree ?>
                     <div class="col border border-1 border-black">
 
+
                         <p><strong><?= $id . '. ' . $degree ?></strong></p>
 
                         <?php
+
 
                         $sql_courses = "SELECT `courses`.`name` AS `course` FROM `degrees` JOIN `courses` ON `courses`.`degree_id` = degrees.id WHERE `degrees`.`id`= $id;"; //creo una query e la metto in una var
                         $result_courses = $conn->query("$sql_courses");
@@ -66,6 +70,7 @@ var_dump($result->fetch_assoc());
                             <div><?= $course['course'] ?></div>
 
                         <?php endwhile ?>
+
 
                     </div>
                 <?php endwhile ?>
