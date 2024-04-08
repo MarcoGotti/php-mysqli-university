@@ -13,15 +13,19 @@ if ($conn && $conn->connect_error) {
 
 //var_dump($conn);
 
-$sql = "SELECT `degrees`.`id`, `degrees`.`name` AS `degree`
-FROM `degrees`;"; //creo una query e la metto in una var
+$sql = "SELECT `degrees`.`id`, `degrees`.`name` AS `degree`,`courses`.`name` AS `course`, `teachers`.`surname`, `teachers`.`name`
+FROM `degrees`
+JOIN `courses` ON `courses`.`degree_id` = degrees.id 
+JOIN `course_teacher` ON `course_teacher`.`course_id`=`courses`.`id`
+JOIN `teachers` ON `course_teacher`.`teacher_id`=`teachers`.`id`
+ORDER BY `degrees`.`name`;"; //creo una query e la metto in una var
 $result = $conn->query("$sql"); //method query: mi da un'altro oggetto/istanza che va salvato in un'altra var
 
-var_dump($result);
+//var_dump($result);
 
 //var_dump($result->fetch_all(MYSQLI_ASSOC));
-var_dump($result->fetch_assoc());
-var_dump($result->fetch_assoc());
+//var_dump($result->fetch_assoc());
+//var_dump($result->fetch_assoc());
 
 
 ?>
@@ -41,36 +45,31 @@ var_dump($result->fetch_assoc());
 </head>
 
 <body>
-
     <header class="p-3">
         <a href="index.php">Students</a>
         <a href="firstSem.php">First-Semester</a>
         <a href="degrees.php">Degrees</a>
     </header>
-
     <main>
         <div class="container my-3">
-            <div>Tot Results: <?= $result->num_rows ?></div>
-            <div class="row row-cols-3">
-                <?php while ($degree = $result->fetch_assoc()) :
-                    ['degree' => $degree, 'id' => $id] = $degree ?>
-                    <div class="col border border-1 border-black">
+
+            <div class="row">
+                <?php $currentDegree = '';
+                while ($item = $result->fetch_assoc()) :
+
+                    ['degree' => $degree, 'id' => $id, 'course' => $course, 'name' => $name, 'surname' => $surname] = $item;
 
 
-                        <p><strong><?= $id . '. ' . $degree ?></strong></p>
-                        <strong>Corsi</strong>
-                        <?php
+                    if ($degree != $currentDegree) {
+                        echo '<div class="col-12"><h4>' . $degree . '</h4></div>';
+                        $currentDegree = $degree;
+                    } ?>
 
 
-                        $sql_courses = "SELECT `courses`.`name` AS `course` FROM `degrees` JOIN `courses` ON `courses`.`degree_id` = degrees.id WHERE `degrees`.`id`= $id;"; //creo una query e la metto in una var
-                        $result_courses = $conn->query("$sql_courses");
+                    <div class="col-6 d-flex justify-content-between  border border-1 border-black">
 
-                        while ($course = $result_courses->fetch_assoc()) : ?>
-
-                            <div><?= $course['course'] ?></div>
-
-                        <?php endwhile ?>
-
+                        <span><strong><?= $course ?></strong></span>
+                        <span class="">Prof. <?= $name . ' ' . $surname ?></span>
 
                     </div>
                 <?php endwhile ?>

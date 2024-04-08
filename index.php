@@ -11,15 +11,22 @@ if ($conn && $conn->connect_error) {
     echo 'connection failed: ' . $conn->connect_error;
 }
 
-//var_dump($conn);
 
-$sql = "SELECT * FROM `students` WHERE YEAR(date_of_birth)=1990;"; //creo una query e la metto in una var
-$result = $conn->query("$sql"); //method query: mi da un'altro oggetto/istanza che va salvato in un'altra var
+/* $sql = "SELECT * FROM `students` WHERE YEAR(date_of_birth)=1990;"; //creo una query e la metto in una var
+$result = $conn->query("$sql"); //method query: mi da un'altro oggetto/istanza che va salvato in un'altra var */
 
-//var_dump($result);
-
-//var_dump($result->fetch_all(MYSQLI_ASSOC));
 //var_dump($result->fetch_assoc());
+//var_dump(empty($_POST['year']));
+
+if (empty($_POST['year'])) {
+
+    $sql = "SELECT * FROM `students`;"; //creo una query e la metto in una var
+    $result = $conn->query("$sql"); //method query: mi da un'altro oggetto/istanza che va salvato in un'altra var
+} else {
+    $year = $_POST['year'];
+    $sql = "SELECT * FROM `students` WHERE YEAR(date_of_birth)=$year;";
+    $result = $conn->query("$sql");
+}
 
 
 ?>
@@ -39,10 +46,20 @@ $result = $conn->query("$sql"); //method query: mi da un'altro oggetto/istanza c
 </head>
 
 <body>
-    <header class="p-3">
-        <a href="index.php">Students</a>
-        <a href="firstSem.php">First-Semester</a>
-        <a href="degrees.php">Degrees</a>
+    <header class="p-3 d-flex justify-content-between">
+
+        <form action="" method="post">
+            <input type="text" name="year" id="year" placeholder="Type a year YYYY">
+            <button type="submit">search</button>
+            <a href="./">Reset</a>
+        </form>
+
+        <div>
+            <a href="index.php">Students</a>
+            <a href="firstSem.php">First-Semester</a>
+            <a href="degrees.php">Degrees</a>
+        </div>
+
     </header>
     <main>
         <div class="container my-3">
