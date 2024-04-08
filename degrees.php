@@ -58,7 +58,7 @@ var_dump($result->fetch_assoc());
 
 
                         <p><strong><?= $id . '. ' . $degree ?></strong></p>
-
+                        <strong>Corsi</strong>
                         <?php
 
 
