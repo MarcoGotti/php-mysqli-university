@@ -6,16 +6,16 @@ require_once __DIR__ . '/layouts/head.php';
 if (isset($_POST['year']) && !is_numeric($_POST['year'])) {
 
     $sql = "SELECT * FROM `students`;";
-    $result = $conn->query("$sql");
+    $result = $conn->query($sql);
     echo 'not a number';
 } elseif (empty($_POST['year'])) {
 
     $sql = "SELECT * FROM `students`;"; //creo una query e la metto in una var
-    $result = $conn->query("$sql"); //method query: mi da un'altro oggetto/istanza che va salvato in un'altra var
+    $result = $conn->query($sql); //method query: mi da un'altro oggetto/istanza che va salvato in un'altra var
 } else {
     $year = $_POST['year'];
     $sql = "SELECT * FROM `students` WHERE YEAR(date_of_birth)=$year;";
-    $result = $conn->query("$sql");
+    $result = $conn->query($sql);
 }
 
 ?>
